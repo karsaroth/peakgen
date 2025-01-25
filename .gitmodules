@@ -1,0 +1,4 @@
+[submodule "jgltf-mesh"]
+	path = jgltf-mesh
+	url = git@github.com:karsaroth/jgltf-mesh.git
+	branch = feature/large-buffer
