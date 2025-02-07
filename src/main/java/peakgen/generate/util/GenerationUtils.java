@@ -30,6 +30,26 @@ public final class GenerationUtils {
     return dir;
   }
 
+  /**
+   * Validate that a file can be written to.
+   * @param parentDir A validated parent directory (via {@link #validateDir(String)})
+   * @param fileName The name of the file to be validated
+   * @return A File that can be written to.
+   */
+  public static File verifyFileForWriting(File parentDir, String fileName) {
+    Tuples.T2<Boolean, String> result = Tuples.T2.of(true, "");
+    result = attempt(result, "Invalid filename %s".formatted(fileName),
+        () -> !fileName.contains("/") && !fileName.contains("\\"));
+    File toCreate = new File(parentDir, fileName);
+    result = attempt(result, "Cannot write to file %s".formatted(toCreate.getAbsolutePath()),
+        () -> !toCreate.exists() || toCreate.canWrite()
+    );
+    if (!result.first()) {
+      throw new IllegalArgumentException(result.second());
+    }
+    return toCreate;
+  }
+
   public static Tuples.T2<Boolean, String> attempt(
       Tuples.T2<Boolean, String> previous, String what, Supplier<Boolean> s) {
     if (previous.first()) {
